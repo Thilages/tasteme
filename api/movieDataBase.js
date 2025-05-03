@@ -28,21 +28,30 @@ export const fetchPopularMovies = async () => {
 }
 
 export const SearchMovies = async (searchQuery, page = 1) => {
-  const SEARCH_URL = `https://api.themoviedb.org/3/search/multi?query=${searchQuery}&include_adult=false&language=en-US&page=${page}`
+  const SEARCH_URL = `https://api.themoviedb.org/3/search/movie?query=${searchQuery}&include_adult=false&language=en-US&page=${page}`
 
   try {
     const results = await fetch(SEARCH_URL, options)
     const jsonData = await results.json()
 
-    const allData = jsonData.results
-
-
-
-
-
+    return jsonData.results
 
   } catch (error) {
 
   }
 
+}
+
+export const SearchTVShows = async (searchQuery, page = 1) => {
+  const SEARCH_URL = `https://api.themoviedb.org/3/search/tv?query=${searchQuery}&include_adult=false&language=en-US&page=${page}`
+
+  try {
+    const results = await fetch(SEARCH_URL, options)
+    const jsonData = await results.json()
+
+    return jsonData.results
+
+  } catch (error) {
+
+  }
 }

@@ -1,7 +1,13 @@
+
 import { Geist, Geist_Mono, Raleway } from "next/font/google";
 import "./globals.css";
+import "./index.css"
 import Sidebar from "@/components/Sidebar";
 import { ThemeProvider } from "@/components/theme-provider"
+import { AuthProvider } from "@/context/AuthContext";
+import AleartMessage from "@/components/AleartMessage";
+
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -23,22 +29,28 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+
+
+
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable}  antialiased`}
       >
-        <Sidebar />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <AuthProvider>
+          <AleartMessage />
+          <Sidebar />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
 
-          {children}
-        </ThemeProvider>
-
+            {children}
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
