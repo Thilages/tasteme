@@ -9,7 +9,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [authStatus, setAuthStatus] = useState(false);
   const [showAlert, setshowAlert] = useState(false)
-  const [alertMessage, setalertMessage] = useState("")
+  const [alertMessage, setalertMessage] = useState({ title: "", message: "", error: false })
 
   useEffect(() => {
     const user = checkAuthStatus(); // Replace with your actual authentication check logic
