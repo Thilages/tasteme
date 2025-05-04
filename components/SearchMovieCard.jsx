@@ -8,10 +8,13 @@ import { CiCirclePlus } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AddMoviesAndTvShows } from '@/lib/firebase';
+import { useAuth } from '@/context/AuthContext';
 
 const POSTER_BASE_URL = "https://image.tmdb.org/t/p/original";
 
 const SearchMovieCard = ({ MetaData }) => {
+  const { user } = useAuth()
   const [rating, setRating] = useState(2.5);
 
   const posterPath = POSTER_BASE_URL.concat(MetaData.poster_path);
@@ -21,8 +24,14 @@ const SearchMovieCard = ({ MetaData }) => {
   }
 
   const handleItemSave = async () => {
-    console.log(MetaData)
-    console.log(rating)
+
+    const data = {
+      name: MetaData.name ? MetaData.name : MetaData.title,
+      posterUrl: MetaData.poster_path,
+      rating: rating
+    }
+
+    await AddMoviesAndTvShows(user.uid, data)
   }
 
 

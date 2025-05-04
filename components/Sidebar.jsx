@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { CgProfile } from "react-icons/cg";
 import { RiAiGenerate2 } from "react-icons/ri";
 import { FaSearch } from "react-icons/fa";
+import { useAuth } from '@/context/AuthContext';
 
 const navItems = [
   { href: '/', icon: CgProfile, size: 24 },
@@ -18,7 +19,7 @@ const LAPTOP_BREAKPOINT_PX = 500;
 const Sidebar = () => {
   const [isLaptop, setIsLaptop] = useState(null);
   const pathname = usePathname();
-
+  const { user } = useAuth()
   useEffect(() => {
     const checkSize = () => window.innerWidth > LAPTOP_BREAKPOINT_PX;
     setIsLaptop(checkSize());
@@ -49,7 +50,7 @@ const Sidebar = () => {
   };
 
   return (
-    <>
+    <>{user ? <>
       {isLaptop ? (
         <aside className="fixed left-0 top-0 h-screen w-20 bg-background p-4 rounded-r-lg flex flex-col items-center justify-center gap-8 z-40 border-r border-border">
           {navItems.map((item) => {
@@ -77,7 +78,7 @@ const Sidebar = () => {
           })}
         </nav>
       )}
-    </>
+    </> : <></>}</>
   );
 }
 

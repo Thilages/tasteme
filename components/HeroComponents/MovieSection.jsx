@@ -23,7 +23,7 @@ const MovieSection = () => {
         <Button variant="outline">Add more</Button>
       </div>
       <div className='w-full border-t border-foreground/20 mt-2 grid grid-cols-2 gap-5 sm:grid-cols-4 md:grid-cols-5'></div>
-      <div className='grid grid-cols-2 gap-5 sm:grid-cols-4 md:grid-cols-5 mt-2'>{Movies ? Movies.map((item, index) => <MovieCard key={index} metaData={item} />) : <div className='text-foreground'>No Movies to show</div>}</div>
+      <div className='grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 mt-2'>{Movies ? Movies.map((item, index) => <MovieCard key={index} metaData={item} />) : <div className='text-foreground'>No Movies to show</div>}</div>
     </div>
   )
 }

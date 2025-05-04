@@ -14,7 +14,7 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useAuth } from "@/context/AuthContext";
-import { SignUpUser } from "@/api/firebase";
+import { loginUser, SignUpUser } from "@/lib/firebase";
 
 const AuthPage = () => {
   const { setshowAlert, setalertMessage } = useAuth();
@@ -64,25 +64,27 @@ const AuthPage = () => {
     if (type === "login") {
       if (!validateLogin()) return;
 
-
-
-      setshowAlert(true);
-      setalertMessage({
-        title: "Login successful",
-        message: "Have fun and explore Taste Me",
-        error: false,
-      });
+      await loginUser(
+        loginData.username,
+        loginData.password,
+        (message) => {
+          setshowAlert(true)
+          setalertMessage(message)
+        })
     } else if (type === "signup") {
       if (!validateSignup()) return;
-      await SignUpUser(signupData.username, signupData.password)
-      setshowAlert(true);
-      setalertMessage({
-        title: "Sign-up successful",
-        message: "You have successfully signed up!",
-        error: false,
-      });
+
+      await SignUpUser(
+        signupData.username,
+        signupData.password,
+        (successMessage) => {
+          setshowAlert(true);
+          setalertMessage(successMessage);
+        }
+      );
     }
   };
+
 
   return (
     <div className="h-full w-full flex justify-center items-center">

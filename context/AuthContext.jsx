@@ -1,23 +1,25 @@
 'use client'
 
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { checkAuthStatus } from "@/api/firebase";
+import { checkAuthStatus } from "@/lib/firebase";
 // Create Auth Context
 const AuthContext = createContext();
 
 // AuthProvider Component
 export const AuthProvider = ({ children }) => {
-  const [authStatus, setAuthStatus] = useState(false);
+  const [user, setUser] = useState();
   const [showAlert, setshowAlert] = useState(false)
   const [alertMessage, setalertMessage] = useState({ title: "", message: "", error: false })
 
   useEffect(() => {
-    const user = checkAuthStatus(); // Replace with your actual authentication check logic
-    setAuthStatus(user);
+    const user = checkAuthStatus((user) => setUser(user)); // Replace with your actual authentication check logic
+
+    
+
   }, []);
 
   return (
-    <AuthContext.Provider value={{ authStatus, setAuthStatus, showAlert, setshowAlert, setalertMessage, alertMessage }}>
+    <AuthContext.Provider value={{ user, setUser, showAlert, setshowAlert, alertMessage, setalertMessage, }}>
       {children}
     </AuthContext.Provider>
   );
