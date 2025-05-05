@@ -1,65 +1,118 @@
-'use client'
-import React, { useState, useRef } from 'react'
-import { Input } from "@/components/ui/input"
-import { Button } from '@/components/ui/button'
-import { SearchMovies, SearchTVShows } from '@/api/movieDataBase'
-import SearchSelection from '@/components/SearchSelection'
+'use client';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Input } from "@/components/ui/input";
+import { SearchGames, SearchMovies, SearchSongs, SearchTVShows } from '@/api/movieDataBase';
+import SearchSelection from '@/components/SearchSelection';
+import SearchMovieCard from '@/components/SearchMovieCard';
+import SearchGameCard from '@/components/SearchGameCard';
+import SearchSongsCard from '@/components/SearchSongsCard';
 
-import SearchMovieCard from '@/components/SearchMovieCard'
+const Page = () => {
+  const [selectedGenre, setselectedGenre] = useState("Movies");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [SearchList, setSearchList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
+  const debounceSearch = useCallback(
+    (query) => {
+      if (!query.trim()) {
+        setSearchList([]);
+        return;
+      }
 
-const page = () => {
+      setLoading(true);
+      const fetchResults = async () => {
+        try {
+          let results = [];
+          switch (selectedGenre) {
+            case "Movies":
+              results = await SearchMovies(query);
+              break;
+            case "TV Shows":
+              results = await SearchTVShows(query);
+              break;
+            case "Games":
+              results = await SearchGames(query);
+              break;
+            case "Songs":
+              results = await SearchSongs(query);
+              break;
+            default:
+              console.log("Invalid genre selection.");
+          }
+          setSearchList(results);
+        } catch (error) {
+          console.error("Error fetching search results:", error);
+          setSearchList([]);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-  const input = useRef()
+      fetchResults();
+    },
+    [selectedGenre]
+  );
 
-  const [selectedGenre, setselectedGenre] = useState("Movies")
+  const handleSearchList = (item, key) => {
+    if (selectedGenre === "Movies" || selectedGenre === "TV Shows") {
+      return <SearchMovieCard key={key} MetaData={item} />;
+    } else if (selectedGenre === "Games") {
+      return <SearchGameCard key={key} MetaData={item} />;
+    } else { return <SearchSongsCard key={key} metadata={item} />; }
 
-  const [searchQuery, setSearchQuery] = useState("")
+  };
 
-  const [SearchList, setSearchList] = useState([])
+  // Debounce logic
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      debounceSearch(searchQuery);
+    }, 500); // 500ms debounce delay
 
-  const handleSearchQueryChange = () => {
-    setSearchQuery(input.current.value)
-  }
+    return () => clearTimeout(delayDebounce); // Cleanup on unmount or query change
+  }, [searchQuery, debounceSearch]);
 
-  const handleSearch = async () => {
-    switch (selectedGenre) {
-      case "Movies":
-        const MovieList = await SearchMovies(searchQuery);
-        setSearchList(MovieList)
-        break;
-
-      case "TV Shows":
-        const TVShowList = await SearchTVShows(searchQuery)
-        setSearchList(TVShowList)
-        break
-
-      default:
-        console.log("nothing")
-    }
-  }
+  const handleSearchQueryChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
-
-    <div className='pb-20 sm:pl-[100px] w-full max-w-[1000px] mx-auto py-5 px-5 sm:px-10 flex flex-col items-center'>
-
-      <div className='flex w-full gap-5'>
-        <Input ref={input} onChange={() => handleSearchQueryChange()} className="" type="string" placeholder="Type something here.." />
-        <Button onClick={() => { handleSearch() }}>Search</Button>
+    <div className="pb-20 sm:pl-[100px] w-full max-w-[1000px] mx-auto py-5 px-5 sm:px-10 flex flex-col items-center">
+      {/* Search Bar */}
+      <div className="flex w-full gap-5">
+        <Input
+          value={searchQuery}
+          onChange={handleSearchQueryChange}
+          className=""
+          type="text"
+          placeholder="Type something here..."
+        />
       </div>
 
-      <div className='w-[80%] border border-foreground/10 mt-3' />
+      {/* Divider */}
+      <div className="w-[80%] border border-foreground/10 mt-3" />
 
+      {/* Search Genre Selection */}
       <SearchSelection setSelectedGenre={setselectedGenre} SelectedGenre={selectedGenre} />
 
-      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5 mt-4' >
-        {SearchList.map((item, key) => (
-          <SearchMovieCard key={key} MetaData={item} />
-        ))}
+      {/* Results */}
+      <div
+        className={
+          selectedGenre === "Games" || "Songs"
+            ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mt-4"
+            : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5 mt-4"
+        }
+      >
+        {loading ? (
+          <div className="col-span-full text-center text-gray-500">Searching...</div>
+        ) : SearchList.length > 0 ? (
+          SearchList.map((item, key) => handleSearchList(item, key))
+        ) : (
+          <div className="col-span-full text-center mt-10 text-gray-500">No results found.</div>
+        )}
       </div>
     </div>
+  );
+};
 
-  )
-}
-
-export default page
+export default Page;

@@ -8,47 +8,54 @@ import { CiCirclePlus } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AddMoviesAndTvShows } from '@/lib/firebase';
 import { useAuth } from '@/context/AuthContext';
+import { AddSongs } from '@/lib/firebase';
 
-const POSTER_BASE_URL = "https://image.tmdb.org/t/p/original";
 
-const SearchMovieCard = ({ MetaData }) => {
+const SearchSongsCard = ({ metadata }) => {
+  if (!metadata) return null; // Gracefully handle missing metadata
   const { user, setshowAlert, setalertMessage } = useAuth()
   const [rating, setRating] = useState(2.5);
-
-  const posterPath = POSTER_BASE_URL.concat(MetaData.poster_path);
-
-  if (!MetaData.poster_path) {
-    return null;
-  }
+  const { posterUrl, name } = metadata; // Destructure metadata for cleaner code
 
   const handleItemSave = async () => {
 
     const data = {
-      name: MetaData.name ? MetaData.name : MetaData.title,
-      posterUrl: MetaData.poster_path,
+      name: name,
+      posterUrl: posterUrl,
       rating: rating
     }
 
-    await AddMoviesAndTvShows(
-      user.uid,
-      data,
-      (message) => {
-        setshowAlert(true)
-        setalertMessage(message)
-      })
+    await AddSongs(user.uid, data, (message) => {
+      setshowAlert(true)
+      setalertMessage(message)
+    })
+
   }
 
 
   return (
-    <div className="w-full p-2 border rounded-md relative">
-      <img src={posterPath} className="object-contain" />
-      <p className="mt-2 text-center">
-        {MetaData.name ? MetaData.name : MetaData.title}
-      </p>
+    <div className="flex relative w-full   border border-foreground/20 rounded-lg ">
+      {/* Image Section */}
+      <div className="w-1/3 flex-shrink-0">
+        <img
+          src={posterUrl}
+          alt={name}
+          className="w-full h-full rounded-l-md object-cover"
+          loading="lazy"
+        />
+      </div>
 
-      <div className="absolute top-3 right-3">
+      {/* Song Title Section */}
+      <div className="flex w-full mt-10 items-end pl-4 py-2">
+        <p
+          className="text-md w-full  line-clamp-2"
+          title={name} // Tooltip with the full name
+        >
+          {name || 'Unknown Song'}
+        </p>
+      </div>
+      <div className='absolute top-2 right-2'>
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -102,4 +109,4 @@ const SearchMovieCard = ({ MetaData }) => {
   );
 };
 
-export default SearchMovieCard;
+export default SearchSongsCard;

@@ -9,21 +9,21 @@ const AleartMessage = () => {
   const { title = "Notice", message = "", error = false } = alertMessage;
 
   useEffect(() => {
-    console.log("Alert message updated:", alertMessage); // Debugging log
+    console.log("Alert message updated:", alertMessage);
     if (showAlert) {
       const timer = setTimeout(() => {
-        setshowAlert(false); // Hide the alert after 3 seconds
+        setshowAlert(false);
       }, 3000);
 
-      return () => clearTimeout(timer); // Clear the timer on component unmount or `showAlert` change
+      return () => clearTimeout(timer);
     }
-  }, [showAlert, setshowAlert, alertMessage]); // Add `alertMessage` as a dependency to ensure updates trigger the effect
+  }, [showAlert, setshowAlert, alertMessage]);
 
-  // If showAlert is false, don't render the alert
+
   if (!showAlert) return null;
 
   return (
-    <div className="absolute z-50 top-5 right-5" id="alert">
+    <div className="fixed z-50 top-2 right-2" id="alert">
       <Alert variant={error ? "destructive" : "default"}>
         <AlertTitle className="font-semibold">{title}</AlertTitle>
         <AlertDescription className="font-medium">

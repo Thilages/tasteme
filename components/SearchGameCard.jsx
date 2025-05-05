@@ -8,42 +8,36 @@ import { CiCirclePlus } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AddMoviesAndTvShows } from '@/lib/firebase';
+import { AddGames, AddMoviesAndTvShows } from '@/lib/firebase';
 import { useAuth } from '@/context/AuthContext';
 
-const POSTER_BASE_URL = "https://image.tmdb.org/t/p/original";
 
-const SearchMovieCard = ({ MetaData }) => {
+
+const SearchGameCard = ({ MetaData }) => {
   const { user, setshowAlert, setalertMessage } = useAuth()
   const [rating, setRating] = useState(2.5);
 
-  const posterPath = POSTER_BASE_URL.concat(MetaData.poster_path);
-
-  if (!MetaData.poster_path) {
-    return null;
-  }
 
   const handleItemSave = async () => {
 
     const data = {
       name: MetaData.name ? MetaData.name : MetaData.title,
-      posterUrl: MetaData.poster_path,
+      posterUrl: MetaData.background_image,
       rating: rating
     }
 
-    await AddMoviesAndTvShows(
-      user.uid,
-      data,
-      (message) => {
-        setshowAlert(true)
-        setalertMessage(message)
-      })
+    await AddGames(user.uid, data, (message) => {
+      setshowAlert(true)
+      setalertMessage(message)
+    })
+
+
   }
 
 
   return (
-    <div className="w-full p-2 border rounded-md relative">
-      <img src={posterPath} className="object-contain" />
+    <div className="w-full p-2 border rounded-md relative aspect-[16/9]">
+      <img src={MetaData.background_image} className="items-center object-cover h-full w-full " />
       <p className="mt-2 text-center">
         {MetaData.name ? MetaData.name : MetaData.title}
       </p>
@@ -102,4 +96,4 @@ const SearchMovieCard = ({ MetaData }) => {
   );
 };
 
-export default SearchMovieCard;
+export default SearchGameCard;
