@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
       >
         <AuthProvider>
           <AleartMessage />
-          <Sidebar />
+          {/* <Sidebar /> */}
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"

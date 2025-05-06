@@ -15,7 +15,7 @@ const Hero = () => {
   return (
     <div className="mt-5 flex justify-between gap-10">
 
-      <div className="w-full max-w-[1000px] mx-auto sm:grid sm:grid-cols-2 lg:grid-cols-3  sm:gap-10 flex flex-col">
+      <div className="w-full max-w-[1000px] mx-auto sm:grid sm:grid-cols-2 lg:grid-cols-3  sm:gap-10 flex flex-col items-center">
 
         {/* Library Section */}
         <div className="col-span-1 p-6 rounded-lg hidden lg:block">

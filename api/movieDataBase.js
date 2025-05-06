@@ -158,3 +158,8 @@ export const SearchSongs = async (query) => {
     return null;
   }
 };
+
+
+export const getTopGerne = async () => {
+    
+}

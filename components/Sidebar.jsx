@@ -10,7 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 
 const navItems = [
   { href: '/', icon: CgProfile, size: 24 },
-  { href: '/generate', icon: RiAiGenerate2, size: 24 },
+ 
   { href: '/search', icon: FaSearch, size: 20 },
 ];
 

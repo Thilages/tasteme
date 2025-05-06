@@ -17,38 +17,38 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from '@/context/AuthContext';
-import { getUserData, upDataProfile } from '@/lib/firebase';
+import { getUserData, upDataProfile, fetchGenres } from '@/lib/firebase'; // Ensure fetchGenres API function exists
 
 // Card Component
-const Card = ({ genre, catagry }) => {
-  const bgColor = catagry === "movie" ? "bg-green-200" :
-    catagry === "game" ? "bg-blue-200" :
-      "bg-pink-200";
+const Card = ({ genre }) => {
+  
 
-  const textColor = catagry === "movie" ? "text-green-800" :
-    catagry === "game" ? "text-blue-800" :
-      "text-pink-800";
+  // Get the first key and value dynamically from the input object
+  const [category, name] = Object.entries(genre)[0];
+ 
+
+  const bgColor =
+    category === "movie" ? "bg-green-200" :
+      category === "game" ? "bg-blue-200" :
+        "bg-pink-200";
+
+  const textColor =
+    category === "movie" ? "text-green-800" :
+      category === "game" ? "text-blue-800" :
+        "text-pink-800";
 
   return (
     <div className={`${bgColor} ${textColor} px-3 py-1.5 rounded-full w-fit text-sm font-medium shadow-sm`}>
       <div className="flex items-center gap-1">
-        {catagry === "movie" ? <MdMovie className="text-lg" /> :
-          catagry === "game" ? <FaGamepad className="text-lg" /> :
+        {category === "movie" ? <MdMovie className="text-lg" /> :
+          category === "game" ? <FaGamepad className="text-lg" /> :
             <IoMdMusicalNote className="text-lg" />}
-        {genre}
+        {name}
       </div>
     </div>
   );
 };
 
-const musicGenres = [
-  { genre: "sci-fi", type: "movie" },
-  { genre: "drama", type: "movie" },
-  { genre: "fps", type: "game" },
-  { genre: "rpg", type: "game" },
-  { genre: "jazz", type: "song" },
-  { genre: "rock", type: "song" }
-];
 
 // UserInfo Component
 const UserInfo = () => {
@@ -58,24 +58,37 @@ const UserInfo = () => {
     name: "",
     bio: "",
   });
+  const [genres, setGenres] = useState([]);
+  const [taste, settaste] = useState({
+    title: "",
+    description: ""
+  })
 
   useEffect(() => {
     // Fetch user details from the database
     const fetchUserData = async () => {
       try {
         const data = await getUserData(user.uid);
-        console.log(data)
         setDbData({
-          name: data.name || "Anonymous",
-          bio: data.bio || "add a bio"
+          name: data?.name || "Anonymous",
+          bio: data?.bio || "Add a bio",
         });
-        setBio(typeof data.bio === "string" ? data.bio : "Add a bio here...");
+        setGenres(data.gerne)
+
+        settaste({
+          title: data.tasteTitle,
+          description: data.tasteDetails
+        })
+        setBio(data.bio || "Add a bio here...");
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
 
+    // Fetch genres from the API
+
     fetchUserData();
+
   }, [user.uid]);
 
   const handleBioChange = (e) => {
@@ -104,9 +117,13 @@ const UserInfo = () => {
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">
-          {musicGenres.map((item, index) => (
-            <Card key={index} genre={item.genre} catagry={item.type} />
-          ))}
+          {genres.length > 0 ? (
+            genres.map((item, index) => (
+              <Card key={index} genre={item} />
+            ))
+          ) : (
+            <p className="text-background/60">Select 3 songs, 3 movies, and 3 games to see these.</p>
+          )}
         </div>
 
         <div className="w-fit mt-4">
@@ -146,11 +163,16 @@ const UserInfo = () => {
 
       {/* Right Column: Eclectic Description */}
       <div className="flex flex-col">
-        <p className="font-semibold text-2xl text-background/70 mb-4 border-b pb-2 border-background/30">Eclectic Tastes</p>
+        <p className="font-semibold text-2xl text-background/70 mb-4 border-b pb-2 border-background/30">
+          {taste.title ? taste.title : "LET ME JUDGE YOU ALREADY"}
+        </p>
         <p className="text-background/70 leading-relaxed">
-          This captures the idea of having diverse tastes or preferences across different genres in a concise way. It highlights a broad appreciation for various forms of entertainment and art.
+          {taste.description
+            ? taste.description
+            : "Come on, give me your top 3 movies, games, and songs so I can roast—oops, I mean, understand you better!"}
         </p>
       </div>
+
     </div>
   );
 };

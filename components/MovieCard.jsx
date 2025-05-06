@@ -12,7 +12,7 @@ const MovieCard = ({ metaData }) => {
     ? POSTER_BASE_URL + metaData.posterUrl
     : FALLBACK_POSTER_URL;
   const title = metaData?.name || "Untitled Movie";
-  const rating = metaData?.rating ? metaData.rating.toFixed(1) : null; // Format rating to 1 decimal place
+  const rating = metaData?.rating  // Format rating to 1 decimal place
 
   return (
     // Card container: Added overflow-hidden, subtle background, shadow, hover effect, and transition
@@ -31,12 +31,12 @@ const MovieCard = ({ metaData }) => {
           }}
         />
         {/* Rating Badge: Only show if rating exists. Adjusted styling. */}
-        {rating && (
+        {
           <div className='absolute top-2 right-2 rounded-md bg-background/80 backdrop-blur-sm px-2 py-1 font-sans text-sm flex items-center gap-1 shadow'>
             <FaStar className='text-amber-400 w-4 h-4' /> {/* Slightly adjusted star color/size */}
             <span className='font-semibold'>{rating}</span>
           </div>
-        )}
+        }
       </div>
 
       {/* Title Area: Added padding, centered text, bolder font, truncation */}

@@ -30,7 +30,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className='flex justify-between items-center'>
+    <div className='flex justify-between items-center max-w-[1000px] mx-auto'>
       {/* left section */}
       <Link href="/">
         <p className='font-stretch-50% font-prim text-2xl font-black 
