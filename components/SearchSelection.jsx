@@ -2,7 +2,7 @@ import React from 'react'
 
 const SearchSelection = ({ SelectedGenre, setSelectedGenre }) => {
 
-  const Genre = ["Movies", "TV Shows", "Games", "Songs"]
+  const Genre = ["Movies", "Games", "Songs"]
 
   return (
     <div className='flex border rounded-md overflow-hidden  border-foreground/50 mt-4' >
