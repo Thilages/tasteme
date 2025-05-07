@@ -6,6 +6,8 @@ import SearchSelection from '@/components/SearchSelection';
 import SearchMovieCard from '@/components/SearchMovieCard';
 import SearchGameCard from '@/components/SearchGameCard';
 import SearchSongsCard from '@/components/SearchSongsCard';
+import Navbar from '@/components/Navbar';
+import Link from 'next/link';
 
 const Page = () => {
   const [selectedGenre, setselectedGenre] = useState("Movies");
@@ -77,41 +79,51 @@ const Page = () => {
   };
 
   return (
-    <div className="pb-20 sm:pl-[100px] w-full max-w-[1000px] mx-auto py-5 px-5 sm:px-10 flex flex-col items-center">
-      {/* Search Bar */}
-      <div className="flex w-full gap-5">
-        <Input
-          value={searchQuery}
-          onChange={handleSearchQueryChange}
-          className=""
-          type="text"
-          placeholder="Type something here..."
-        />
-      </div>
+    <div className='mt-5'>
 
-      {/* Divider */}
-      <div className="w-[80%] border border-foreground/10 mt-3" />
+      <div className="pb-20 sm:pl-[100px] w-full max-w-[1000px] mx-auto  px-5 sm:px-10 flex flex-col items-center">
+        {/* Search Bar */}
+        <div className='w-full pb-5 flex items-center'>
+          <Link href="/">
+            <p className='font-stretch-50% font-prim text-2xl font-black 
+                      hover:cursor-pointer hover:scale-110 '>
+               tasteME.
+            </p>
+          </Link>
+        </div>
+        <div className="flex w-full gap-5">
+          <Input
+            value={searchQuery}
+            onChange={handleSearchQueryChange}
+            className=""
+            type="text"
+            placeholder="Type something here..."
+          />
+        </div>
 
-      {/* Search Genre Selection */}
-      <SearchSelection setSelectedGenre={setselectedGenre} SelectedGenre={selectedGenre} />
+        {/* Divider */}
+        <div className="w-[80%] border border-foreground/10 mt-3" />
 
-      {/* Results */}
-      <div
-        className={
-          selectedGenre === "Games" || "Songs"
-            ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mt-4"
-            : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5 mt-4"
-        }
-      >
-        {loading ? (
-          <div className="col-span-full text-center text-gray-500">Searching...</div>
-        ) : SearchList.length > 0 ? (
-          SearchList.map((item, key) => handleSearchList(item, key))
-        ) : (
-          <div className="col-span-full text-center mt-10 text-gray-500">No results found.</div>
-        )}
-      </div>
-    </div>
+        {/* Search Genre Selection */}
+        <SearchSelection setSelectedGenre={setselectedGenre} SelectedGenre={selectedGenre} />
+
+        {/* Results */}
+        <div
+          className={
+            selectedGenre === "Games" || "Songs"
+              ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mt-4"
+              : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5 mt-4"
+          }
+        >
+          {loading ? (
+            <div className="col-span-full text-center text-gray-500">Searching...</div>
+          ) : SearchList.length > 0 ? (
+            SearchList.map((item, key) => handleSearchList(item, key))
+          ) : (
+            <div className="col-span-full text-center mt-10 text-gray-500">No results found.</div>
+          )}
+        </div>
+      </div></div>
   );
 };
 

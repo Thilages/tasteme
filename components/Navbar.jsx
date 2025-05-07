@@ -1,9 +1,7 @@
-'use client'
-import React from 'react'
-import Link from 'next/link'
+'use client';
+import React, { useState } from 'react';
+import Link from 'next/link';
 import { IoMdAdd } from "react-icons/io";
-import { RiShareBoxLine } from "react-icons/ri";
-import { Button } from './ui/button';
 import { AiOutlineLogout } from "react-icons/ai";
 import {
   AlertDialog,
@@ -15,42 +13,83 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { logOutUser } from '@/lib/firebase';
+} from "@/components/ui/alert-dialog";
+import { Button } from './ui/button';
 import { useAuth } from '@/context/AuthContext';
+import { logOutUser } from '@/lib/firebase';
 
 const Navbar = () => {
-  const { setalertMessage, setshowAlert } = useAuth()
+  const { user, setalertMessage, setshowAlert } = useAuth();
+  const [link] = useState(`${window.location.href}${user?.email.split("@")[0]}`); // Replace with dynamic logic as needed
+  console.log()
   const handleLogOut = async () => {
-    console.log("ff")
+    console.log("Logging out...");
     await logOutUser((message) => {
-      setalertMessage(message)
-      setshowAlert(true)
-    })
-  }
+      setalertMessage(message);
+      setshowAlert(true);
+    });
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(link)
+    setalertMessage({
+      title: "Copied",
+      message: "Your profile url copied successfully",
+      error: false
+    });
+    setshowAlert(true);
+  };
 
   return (
     <div className='flex justify-between items-center max-w-[1000px] mx-auto'>
-      {/* left section */}
+      {/* Left Section */}
       <Link href="/">
         <p className='font-stretch-50% font-prim text-2xl font-black 
                       hover:cursor-pointer hover:scale-110'>
           tasteME.
         </p>
       </Link>
-      {/* right */}
-      <div className='flex justify-center items-center gap-5'>
-        {/* add */}
 
-        {/* share */}
-        <button className='p-2 px-3 flex items-center justify-center  font-semibold gap-2 text-background border-2 bg-foreground
-                            rounded-full hover:cursor-pointer hover:bg-background 
-                            hover:text-foreground transition-colors duration-300'>
-          <RiShareBoxLine /> {window.innerWidth > 500 ? "Share" : ""}
-        </button>
-        <Button variant="outline" className="rounded-full">
+      {/* Right Section */}
+      <div className='flex justify-center items-center gap-5'>
+        {/* Add Button */}
+
+        <Button onClick={() => window.location.href = window.location.href + "search"} variant="outline" className="rounded-full">
           <IoMdAdd />
         </Button>
+
+        {/* Share Button */}
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline" className="rounded-full">
+              🔗
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="max-w-[90%] sm:max-w-[400px] mx-auto text-center">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Share Profile</AlertDialogTitle>
+              <AlertDialogDescription>
+                Copy the link below to share your profile with others.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <div className="flex flex-col gap-4 mt-4">
+              <input
+                type="text"
+                value={link}
+                readOnly
+                className="w-full p-2 border rounded text-center"
+              />
+              <Button onClick={handleCopy} className="w-fit ml-auto">
+                Copy Link
+              </Button>
+            </div>
+            <AlertDialogFooter className="mt-4 absolute -top-2 right-3">
+              <AlertDialogCancel>x</AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Logout Button */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="outline" className="rounded-full">
@@ -70,10 +109,9 @@ const Navbar = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

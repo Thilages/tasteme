@@ -3,9 +3,11 @@ import { Button } from '../ui/button'
 import { FaPlus } from 'react-icons/fa6'
 import { useAuth } from '@/context/AuthContext'
 import { getUserData } from '@/lib/firebase'
+import { useRouter } from 'next/navigation'
 
 const LibraryInfo = () => {
   const { user } = useAuth()
+  const router = useRouter()
   const [details, setdetails] = useState({})
   useEffect(() => {
     // Fetch user details from the database
@@ -25,7 +27,7 @@ const LibraryInfo = () => {
   }, [user.uid]);
   return (
 
-    <><Button className="w-full flex justify-center items-center gap-2  py-2 px-4 rounded-md">
+    <><Button onClick={() => router.push("/search")} className="w-full flex justify-center items-center gap-2  py-2 px-4 rounded-md">
       <FaPlus size={20} />
       Add a Post
     </Button>
