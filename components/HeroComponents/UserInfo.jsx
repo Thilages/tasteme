@@ -21,11 +21,11 @@ import { getUserData, upDataProfile, fetchGenres } from '@/lib/firebase'; // Ens
 
 // Card Component
 const Card = ({ genre }) => {
-  
+
 
   // Get the first key and value dynamically from the input object
   const [category, name] = Object.entries(genre)[0];
- 
+
 
   const bgColor =
     category === "movie" ? "bg-green-200" :
@@ -164,13 +164,41 @@ const UserInfo = () => {
       {/* Right Column: Eclectic Description */}
       <div className="flex flex-col">
         <p className="font-semibold text-2xl text-background/70 mb-4 border-b pb-2 border-background/30">
-          {taste.title ? taste.title : "LET ME JUDGE YOU ALREADY"}
+          {taste.title ? taste.title : "KNOW YOUR TASTE"}
         </p>
-        <p className="text-background/70 leading-relaxed">
-          {taste.description
-            ? taste.description
-            : "Come on, give me your top 3 movies, games, and songs so I can roast—oops, I mean, understand you better!"}
-        </p>
+        <div className="text-background/70 leading-relaxed">
+          {taste.description ? (
+            taste.description
+          ) : (
+            <>
+              <p className="text-background/70 leading-relaxed">
+                {taste.description ? (
+                  taste.description
+                ) : (
+                  <>
+                    Add your{" "}
+                    <span className="font-bold">
+                      top three <span className="text-green-400">songs</span>,{" "}
+                      <span className="text-blue-400">movies</span>, and{" "}
+                      <span className="text-pink-400">games</span>
+                    </span>{" "}
+                    to your collection to discover your taste! Tap the plus icon to get started. Or {" "}
+                    <button
+                      className="text-blue-500 underline"
+                      onClick={() => window.location.href = '/search'}
+                    >
+                      press here
+                    </button>{" "}
+                    to explore more.
+                  </>
+                )}
+              </p>
+
+
+            </>
+          )}
+        </div>
+
       </div>
 
     </div>
