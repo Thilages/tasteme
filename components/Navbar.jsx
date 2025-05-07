@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { IoMdAdd } from "react-icons/io";
 import { AiOutlineLogout } from "react-icons/ai";
@@ -20,8 +20,19 @@ import { logOutUser } from '@/lib/firebase';
 
 const Navbar = () => {
   const { user, setalertMessage, setshowAlert } = useAuth();
-  const [link] = useState(`${window.location.href}${user?.email.split("@")[0]}`); // Replace with dynamic logic as needed
-  console.log()
+  const [link, setLink] = useState('');
+
+  // Dynamically set the link once the component mounts
+  useEffect(() => {
+    if (user?.email) {
+      // Get base URL (e.g., http://localhost:3000 or https://yourdomain.com)
+      const baseUrl = window.location.origin;
+      // Create the link with the user's email part (before @)
+      const profileLink = `${baseUrl}/${user.email.split("@")[0]}`;
+      setLink(profileLink);
+    }
+  }, [user]);
+
   const handleLogOut = async () => {
     console.log("Logging out...");
     await logOutUser((message) => {
@@ -31,10 +42,10 @@ const Navbar = () => {
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(link)
+    navigator.clipboard.writeText(link);
     setalertMessage({
       title: "Copied",
-      message: "Your profile url copied successfully",
+      message: "Your profile URL copied successfully",
       error: false
     });
     setshowAlert(true);
@@ -53,7 +64,6 @@ const Navbar = () => {
       {/* Right Section */}
       <div className='flex justify-center items-center gap-5'>
         {/* Add Button */}
-
         <Button onClick={() => window.location.href = window.location.href + "search"} variant="outline" className="rounded-full">
           <IoMdAdd />
         </Button>
@@ -77,7 +87,7 @@ const Navbar = () => {
                 type="text"
                 value={link}
                 readOnly
-                className="w-full p-2 border rounded text-center"
+                className="w-full p-2 border rounded text-center max-w-full"
               />
               <Button onClick={handleCopy} className="w-fit ml-auto">
                 Copy Link
