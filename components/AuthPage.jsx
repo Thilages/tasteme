@@ -31,9 +31,11 @@ const AuthPage = () => {
 
 
   const handleChange = (e, setState) => {
+    const { id, value } = e.target;
+
     setState((prev) => ({
       ...prev,
-      [e.target.id]: e.target.value,
+      [id]: id === "username" ? value.toLowerCase() : value, // Convert username to lowercase
     }));
   };
 
