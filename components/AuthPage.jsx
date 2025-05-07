@@ -19,7 +19,6 @@ import { loginUser, SignUpUser } from "@/lib/firebase";
 const AuthPage = () => {
   const { setshowAlert, setalertMessage } = useAuth();
 
-
   const [loginData, setLoginData] = useState({ username: "", password: "" });
   const [signupData, setSignupData] = useState({
     username: "",
@@ -29,16 +28,13 @@ const AuthPage = () => {
   const [loginErrors, setLoginErrors] = useState({});
   const [signupErrors, setSignupErrors] = useState({});
 
-
   const handleChange = (e, setState) => {
     const { id, value } = e.target;
-
     setState((prev) => ({
       ...prev,
       [id]: id === "username" ? value.toLowerCase() : value, // Convert username to lowercase
     }));
   };
-
 
   const validateLogin = () => {
     const errors = {};
@@ -47,7 +43,6 @@ const AuthPage = () => {
     setLoginErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
 
   const validateSignup = () => {
     const errors = {};
@@ -59,7 +54,6 @@ const AuthPage = () => {
     return Object.keys(errors).length === 0;
   };
 
-
   const handleSubmit = async (e, type) => {
     e.preventDefault();
 
@@ -70,9 +64,10 @@ const AuthPage = () => {
         loginData.username,
         loginData.password,
         (message) => {
-          setshowAlert(true)
-          setalertMessage(message)
-        })
+          setshowAlert(true);
+          setalertMessage(message);
+        }
+      );
     } else if (type === "signup") {
       if (!validateSignup()) return;
 
@@ -87,14 +82,17 @@ const AuthPage = () => {
     }
   };
 
-
   return (
-    <div className="h-full w-full flex justify-center items-center">
+    <div className="h-full w-full max-w-[1000px] mx-auto flex justify-center items-center">
       <div className="flex flex-col p-5 mx-auto">
         <p className="text-3xl font-bold">Welcome to tasteMe.</p>
-        <p className="text-gray-400">Kindly, Login or Signup to continue</p>
+        <p className="text-gray-400 mb-5">A place to track and share your favorite movies, songs, and games!</p>
+        <p className="text-lg text-gray-600 mb-5">
+          Log in or sign up to join our community and start discovering new favorites, sharing your recommendations, and keeping track of all the content you love. It's your personalized entertainment profile!
+        </p>
         <div className="flex gap-5 mt-5">
 
+          {/* Login Dialog */}
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline">Login</Button>
@@ -141,7 +139,7 @@ const AuthPage = () => {
             </DialogContent>
           </Dialog>
 
-
+          {/* Sign Up Dialog */}
           <Dialog>
             <DialogTrigger asChild>
               <Button className="bg-foreground text-background">Sign Up</Button>
