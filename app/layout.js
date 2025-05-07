@@ -35,9 +35,14 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en" suppressHydrationWarning>
+
+
+      <link rel="icon" href="/icon.png" type="image/png" />
+
       <body
         className={`${geistSans.variable} ${geistMono.variable}  antialiased`}
       >
+
         <AuthProvider>
           <AleartMessage />
           {/* <Sidebar /> */}
