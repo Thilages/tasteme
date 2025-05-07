@@ -40,8 +40,7 @@ const AuthPage = () => {
     const errors = {};
     if (!loginData.username) errors.username = "Username is required.";
     if (!loginData.password) errors.password = "Password is required.";
-    else if (loginData.password.length <= 6)
-      errors.password = "Password must be more than 6 characters.";
+    
     setLoginErrors(errors);
     return Object.keys(errors).length === 0;
   };
